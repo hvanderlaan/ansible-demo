@@ -1,0 +1,14 @@
+[ansible]
+bastion.brakkedoos.nl
+
+[ubuntu]
+bastion.brakkedoos.nl
+web.brakkedoos.nl
+docker.brakkedoos.nl
+
+[centos]
+app.brakkedoos.nl
+
+[linux:children]
+ubuntu
+centos

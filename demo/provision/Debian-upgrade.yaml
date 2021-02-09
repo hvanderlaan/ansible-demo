@@ -1,0 +1,9 @@
+---
+- name: initial upgrade -> update apt repositoy on Debian base systems
+  apt:
+    update_cache: true
+    cache_valid_time: 96400
+
+- name: initial upgrade -? installing upgrades on Debian based systems
+  apt:
+    upgrade: safe

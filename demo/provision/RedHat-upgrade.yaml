@@ -1,0 +1,6 @@
+---
+- name: initial upgrade -> installing upgrades on RedHat based systems
+  dnf:
+    name: '*'
+    update_cache: true
+    state: latest

@@ -1,0 +1,17 @@
+---
+users:
+  - username: ansible
+    home: /home/ansible
+    shell: /bin/bash
+    sudo: true
+    git: false
+    password: '$6$rMunjQdkb/J7ZT8s$Rc14IbSJAYTCZkp.ghkGrknbuUUzm0KOGH2llIfeSrQSYaqDM9GScaenzWiD7DkWqE8.C3mlJk8qOY26PdQAh1'
+    state: present
+
+  - username: haraldvdlaan
+    home: /home/haraldvdlaan
+    shell: /bin/bash
+    sudo: true
+    git: false
+    password: '$6$rMunjQdkb/J7ZT8s$Rc14IbSJAYTCZkp.ghkGrknbuUUzm0KOGH2llIfeSrQSYaqDM9GScaenzWiD7DkWqE8.C3mlJk8qOY26PdQAh1'
+    state: present

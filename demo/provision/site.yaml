@@ -1,0 +1,18 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: include -> bootstrap playbook
+      include: bootstrap.yaml
+      tags: bootstrap
+
+    - name: include -> running initial upgrades
+      include: "{{ ansible_os_family }}-upgrade.yaml"
+      tags: upgrade
+
+    - name: include -> configure bastion
+      include: bastion.yaml
+      when: ansible_fqdn == "bastion.brakkedoos.nl"
+      tags: bastion

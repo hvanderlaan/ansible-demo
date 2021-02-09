@@ -1,0 +1,20 @@
+
+################################################################################
+## This server is managed with ansible. Please make any configuration changes ##
+## on the ansible server. Changes that are done directly in this server will  ##
+## be reverted when the ansible run will hit this server.                     ##
+##                                                                            ##
+## UNAUTHORIZED ACCESS TO THIS DEVICE IS PROHIBITED. You must have explicit,  ##
+## authorized permission to access or configure this device. Unauthorized     ##
+## attempts and actions to access or use this system may result in civil      ##
+## and/or criminal penalties. All activities performed on this device are     ##
+## logged and monitored.                                                      ##
+##                                                                            ##
+## This server is managed with Ansible. If you need to make changes to the    ##
+## configuration, please make the changes in git and push the changes.        ##
+################################################################################
+
+os  : {{ansible_system}} - {{ ansible_lsb.description }} ({{ ansible_lsb.codename }})
+type: {{ ansible_virtualization_role }} - {{ ansible_virtualization_type }}
+fqdn: {{ ansible_fqdn }}
+

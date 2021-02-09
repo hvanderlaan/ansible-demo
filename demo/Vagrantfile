@@ -1,0 +1,106 @@
+# -*- mode: utf-8 -*-
+# vi: ft=ruby
+
+# ============================================================================ #
+# File   : Vagrantfile                                                         #
+# Purpose: Create multi machine multi architecture ansible dev environment.    #
+#                                                                              #
+# Author : Harald van der Laan                                                 #
+# Date   : 2020-09-23                                                          #
+# Version: v1.0.0                                                              #
+# ============================================================================ #
+# Changelog:                                                                   #
+# - v1.0.0: Initial version                              (Harald van der Laan) #
+# ============================================================================ #
+# Copyright © 2020 Harald van der Laan                                         #
+#                                                                              #
+# Permission is hereby granted, free of charge, to any person obtaining        #
+# a copy of this software and associated documentation files (the "Software"), #
+# to deal in the Software without restriction, including without limitation    #
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,     #
+# and/or sell copies of the Software, and to permit persons to whom the        #
+# Software is furnished to do so, subject to the following conditions:         #
+#                                                                              #
+# The above copyright notice and this permission notice shall be included      #
+# in all copies or substantial portions of the Software.                       #
+#                                                                              #
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,              #
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES              #
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.    #
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,  #
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,                #
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE   #
+# OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                #
+# ============================================================================ #
+
+Vagrant.configure("2") do |config|
+
+  # Enable hostnamager plugin. This allows you to ssh to the hostname of the
+  # virtual machine. vagrant plugin install hostmanager
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.hostmanager.ignore_private_ip = false
+  config.hostmanager.include_offline = true
+
+  config.vm.define "bastion.brakkedoos.nl", primary: true do |node|
+    node.vm.box = "ubuntu/bionic64"
+    node.vm.hostname = "bastion.brakkedoos.nl"
+
+    node.vm.network :private_network, ip: "172.16.20.100"
+
+    node.vm.provider :virtualbox do |vbox|
+      vbox.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      vbox.customize ["modifyvm", :id, "--memory", 512]
+      vbox.customize ["modifyvm", :id, "--cpus", 1]
+      vbox.customize ["modifyvm", :id, "--name", "bastion.brakkedoos.nl"]
+      vbox.customize ["modifyvm", :id, "--groups", "/kennis_sessie"]
+    end
+  end
+  config.vm.define "web.brakkedoos.nl", primary: true do |node|
+    node.vm.box = "ubuntu/bionic64"
+    node.vm.hostname = "web.brakkedoos.nl"
+
+    node.vm.network :private_network, ip: "172.16.20.101"
+
+    node.vm.provider :virtualbox do |vbox|
+      vbox.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      vbox.customize ["modifyvm", :id, "--memory", 512]
+      vbox.customize ["modifyvm", :id, "--cpus", 1]
+      vbox.customize ["modifyvm", :id, "--name", "web.brakkedoos.nl"]
+      vbox.customize ["modifyvm", :id, "--groups", "/kennis_sessie"]
+    end
+  end
+  config.vm.define "app.brakkedoos.nl", primary: true do |node|
+    node.vm.box = "centos/8"
+    node.vm.hostname = "app.brakkedoos.nl"
+
+    node.vm.network :private_network, ip: "172.16.20.102"
+
+    node.vm.provider :virtualbox do |vbox|
+      vbox.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      vbox.customize ["modifyvm", :id, "--memory", 512]
+      vbox.customize ["modifyvm", :id, "--cpus", 1]
+      vbox.customize ["modifyvm", :id, "--name", "app.brakkedoos.nl"]
+      vbox.customize ["modifyvm", :id, "--groups", "/kennis_sessie"]
+    end
+  end
+  config.vm.define "docker.brakkedoos.nl", primary: true do |node|
+    node.vm.box = "ubuntu/bionic64"
+    node.vm.hostname = "docker.brakkedoos.nl"
+
+    node.vm.network :private_network, ip: "172.16.20.103"
+
+    node.vm.provider :virtualbox do |vbox|
+      vbox.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      vbox.customize ["modifyvm", :id, "--memory", 512]
+      vbox.customize ["modifyvm", :id, "--cpus", 1]
+      vbox.customize ["modifyvm", :id, "--name", "docker.brakkedoos.nl"]
+      vbox.customize ["modifyvm", :id, "--groups", "/kennis_sessie"]
+    end
+
+    node.vm.provision :ansible do |ansible|
+      ansible.limit = 'all'
+     ansible.playbook = 'provision/site.yaml'
+    end
+  end
+end

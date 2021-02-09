@@ -1,0 +1,65 @@
+---
+- name: apt -> installing required packages for the bastion server
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - python3-pip
+    - vim
+    - curl
+
+- name: pip -> upgrade pip to latest version
+  pip:
+    name: pip
+    state: latest
+
+- name: pip -> installing ansible
+  pip:
+    name: ansible
+    state: present
+
+- name: ssh key -> deploying ssh key for the ansible user
+  copy:
+    src: ansible
+    dest: /home/ansible/.ssh/id_rsa
+    owner: ansible
+    group: ansible
+    mode: 0600
+
+- name: ansible -> create ansible  directory for  the user ansible
+  file:
+    path: /home/ansible/ansible
+    owner: ansible
+    group: ansible
+    mode: 0755
+    state: directory
+
+- name: ansible -> deploy default ansible configuration
+  copy:
+    src: ansible.cfg
+    dest: /home/ansible/ansible/ansible.cfg
+    owner: ansible
+    group: ansible
+    mode: 0644
+
+- name: ansible -> create default directory structure for ansible
+  file:
+    path: "/home/ansible/ansible/{{ item }}"
+    owner: ansible
+    group: ansible
+    mode: 0755
+    state: directory
+  loop:
+    - group_vars
+    - host_vars
+    - inventory
+    - playbooks
+    - roles
+
+- name: ansible -> deploy default ansible inventory file
+  copy:
+    src: hosts
+    dest: /home/ansible/ansible/inventory/hosts
+    owner: ansible
+    group: ansible
+    mode: 0644
